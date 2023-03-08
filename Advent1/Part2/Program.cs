@@ -1,4 +1,4 @@
-﻿var lines = File.ReadLines("example");
+﻿var lines = File.ReadLines("input");
 
 List<int> elves= new List<int>();
 
