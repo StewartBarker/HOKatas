@@ -1,6 +1,7 @@
 ﻿using Part1;
 
-const int maxDirSize = 100000;
+const int diskSize = 70_000_000;
+const int spaceRequired = 30_000_000;
 
 // Initialise at root
 DirectoryNode root = new DirectoryNode("/");
@@ -8,12 +9,29 @@ DirectoryNode currentDir = root;
 
 string[] lines = File.ReadAllLines("input");
 InitTree(lines);
+Console.WriteLine("Total disk size: " + diskSize);
+Console.WriteLine("Root directory size: " + root.GetSize());
+int unusedSpace = diskSize - root.GetSize();
+Console.WriteLine("Unused space: " + unusedSpace);
 
-List<DirectoryNode> answerDirs = new List<DirectoryNode>();
-root.GetDirsBelowSize(maxDirSize, answerDirs);
+int savingNeeded = spaceRequired - unusedSpace;
+Console.WriteLine("Saving needed = " + savingNeeded);
 
-int answer = answerDirs.Sum(dir => dir.Size);
-Console.WriteLine("Answer is: " + answer);
+
+List<FileNode> list = root.ToFlatList();
+Console.WriteLine("List size: " + list.Count);
+List<DirectoryNode> sortedDirList = list.OfType<DirectoryNode>().OrderBy(e => e.Size).ToList();
+Console.WriteLine("DirList size: " + sortedDirList.Count);
+
+for (int i = 0; i < sortedDirList.Count; i++)
+{
+    int dirSize = sortedDirList[i].Size;
+    if (dirSize >= savingNeeded)
+    {
+        Console.WriteLine("Size of dir to remove: " + dirSize);
+        break;
+    }
+}
 
 void InitTree(string[] lines)
 {

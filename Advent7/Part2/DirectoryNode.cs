@@ -75,4 +75,20 @@ public class DirectoryNode : FileNode
         return dirs;
     }
 
+    public List<FileNode> ToFlatList()
+    {
+        Console.WriteLine("Creating flat list for directory " + this.Name);
+        List <FileNode> list= new List<FileNode>(_children);
+        
+        foreach (var child in _children)
+        {
+            if (child.GetType() == typeof(DirectoryNode))
+            {
+                DirectoryNode childDir = (DirectoryNode)child;
+                list.AddRange(childDir.ToFlatList());
+            }
+        }
+        return list;
+    }
+
 }
